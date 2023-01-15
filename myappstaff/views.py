@@ -14,6 +14,10 @@ from django.db.models import Max
 from django.contrib import messages
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.management import call_command
+import requests
+from datetime import datetime
+from pytz import timezone as timezonenow
+th_tz = timezonenow('Asia/Bangkok')
 
 
 def staff_setting_position(req):
@@ -209,6 +213,19 @@ def staff_introduction_update(req,id):
     AllRecList.status = 'อนุมัติ'
     AllRecList.save()
     messages.success(req, 'อนุมัติสำเร็จ!')
+    users = User.objects.filter(right="นักศึกษา")
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllRecList.name, "สถานะ : ", AllRecList.status, AllRecList.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     context = {
         "AllRecList" : AllRecList,
     }
@@ -567,6 +584,19 @@ def staff_return_durable(req,id):
     AllLoanDurable.status = 'คืนสำเร็จ'
     AllLoanDurable.save()
     messages.success(req, 'คืนสำเร็จ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanDurable.name, "สถานะ : ", AllLoanDurable.status, 'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_return')
 
 def staff_unreturn_durable(req,id):
@@ -579,6 +609,19 @@ def staff_unreturn_durable(req,id):
     AllLoanDurable.status = 'คืนไม่สำเร็จ'
     AllLoanDurable.save()
     messages.warning(req, 'คืนไม่สำเร็จ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanDurable.name, "สถานะ : ", AllLoanDurable.status, AllLoanDurable.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_return')
 
 def staff_borrow_parcel(req,id):
@@ -590,6 +633,19 @@ def staff_borrow_parcel(req,id):
     AllLoanParcel.reasonfromstaff = req.POST['reasonfromstaff']
     AllLoanParcel.status = 'รอยืนยันการรับ'
     AllLoanParcel.save()
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanParcel.name, "สถานะ : ", AllLoanParcel.status, AllLoanParcel.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_borrow')
 
 def staff_borrow_durable(req,id):
@@ -602,6 +658,19 @@ def staff_borrow_durable(req,id):
     AllLoanDurable.status = 'รอยืนยันการรับ'
     AllLoanDurable.save()
     messages.success(req, 'รอยืนยันการรับ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanDurable.name, "สถานะ : ", AllLoanDurable.status, AllLoanDurable.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_borrow_durable')
 
 def staff_unborrow_parcel(req,id):
@@ -614,6 +683,19 @@ def staff_unborrow_parcel(req,id):
     AllLoanParcel.status = 'ไม่อนุมัติ'
     AllLoanParcel.save()
     messages.success(req, 'ไม่อนุมัติ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanParcel.name, "สถานะ : ", AllLoanParcel.status, AllLoanParcel.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_borrow')
 
 def staff_unborrow_durable(req,id):
@@ -626,6 +708,19 @@ def staff_unborrow_durable(req,id):
     AllLoanDurable.status = 'ไม่อนุมัติ'
     AllLoanDurable.save()
     messages.success(req, 'ไม่อนุมัติ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    for user in users:
+        if user.token:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token 
+            headers = {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token 
+                }
+            msg = ['รายการ : ', AllLoanDurable.name, "สถานะ : ", AllLoanDurable.status, AllLoanDurable.reasonfromstaff,'วันที่อนุมัติ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+            msg = ' '.join(map(str, msg)) 
+            requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_index_borrow_durable')
 
 # รายละเอียดจัดการวัสดุ-ครุภัณฑ์
@@ -933,13 +1028,6 @@ def pdf_borrow_durable(req):
     }
     return render( req, 'pages/pdf_borrow_durable.html', context)
 
-# แก่ไขข้อมูลส่วนตัว และจัดการข้อมูลส่วนตัว
-@login_required
-def staff_personal_info(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา" or req.user.token == None:
-        return redirect('/')
-    return render(req, 'pages/staff_personal_info.html')  
-
 @login_required
 def staff_admin_user(req):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา" or req.user.token == None:
@@ -1007,7 +1095,7 @@ def staff_admin_user_block(req):
     search_user = ""
     if 'search_user' in req.GET:
         search_user = req.GET['search_user']
-        AllUser = AllUser.filter(Q(first_name__contains=search_user)|Q(last_name__contains=search_user))
+        AllUser = AllUser.filter(Q(first_name__contains=search_user)|Q(last_name__contains=search_user))    
     page_num = req.GET.get('page', 1)
     p = Paginator(AllUser, 10)
     try:
@@ -1066,23 +1154,23 @@ def staff_user_deadline(req, id):
     obj.save()
     scheduler.add_job(update_user_status, 'date', run_date=obj.deadline, args=[id])
     messages.success(req, 'เปลี่ยนสถานะสำเร็จ!')
+    users = User.objects.filter(right="นักศึกษา")
+    datetime_th = th_tz.localize(datetime.now())
+    if scheduler.exists():
+        for user in users:
+            if user.token:
+                url = 'https://notify-api.line.me/api/notify'
+                token = user.token 
+                headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                            }
+                msg = ['คุณถูกระงับสิทธิ์เป็นระยะเวลา ', obj.deadline, 'วัน เหตุผล : ', obj.reason, 'วันที่ถูกระงับ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+                msg = ' '.join(map(str, msg)) 
+                requests.post(url, headers=headers, data={'message': msg})
     return redirect('/staff_admin_user_block') 
 
 scheduler.shutdown()
-
-@login_required
-def staff_personal_info_edit(req,id):
-    obj = User.objects.get(id=id)
-    phone = req.POST.get('phone')
-    if phone:
-        obj.phone = phone
-        obj.save()
-        messages.success(req, 'เพิ่มเบอร์โทรศัพท์สำเร็จ!')
-    else:
-        obj.phone = phone
-        obj.save() 
-        messages.success(req, 'เพิ่มเบอร์โทรศัพท์สำเร็จ!')
-    return redirect('/staff_personal_info') 
 
 @login_required
 def staff_personal_info(req):

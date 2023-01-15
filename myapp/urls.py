@@ -50,7 +50,6 @@ urlpatterns = [
     
     path('user_personal_info', views.user_personal_info, name="user_personal_info"),
     path('user_position', views.user_position, name="user_position"),
-    path('delete_token/<int:id>', views.delete_token, name="delete_token"),
     
     path('pdf_print_position', views.pdf_print_position, name="pdf_print_position"),
     

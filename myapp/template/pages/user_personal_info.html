@@ -69,7 +69,7 @@
                             Line
                         </span>
                         {% if user.phone != none %}
-                        <a class="text-success" data-bs-toggle="modal" data-bs-target="#Delete">
+                        <a class="text-success">
                             กำลังเชื่อมต่อ
                         </a>
                         {% else %}
@@ -91,8 +91,6 @@
             </div>
         </div>
     </div>
-    
-
 
     <!-- รายละเอียดการถูกระงับสิทธิ์ -->
     <div class="modal fade" id="detail" tabindex="-1" aria-labelledby="detailModal" aria-hidden="true">
@@ -123,25 +121,9 @@
         </div>
     </div>
 
-                      <!-- ลบข้อมูล -->
-                      <div class="modal fade" name="Delete" id="Delete" tabindex="-1" aria-labelledby="DeleteuserModal" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="DeleteuserModal">ยืนยันการยกเลิกเชื่อมต่อ Line </h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
-                              <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill" href="{% url 'delete_token' user.id %}">ยืนยัน</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
     <!-- เพิ่มเบอร์โทร -->
     <div class="modal fade" id="phone" tabindex="-1" aria-labelledby="phoneModal" aria-hidden="true">
-        <form method="post" action="/user_personal_info_edit/{{user.id}}" enctype="multipart/form-data">
+        <form method="post" action="/phone_add_number" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
                 <div class="modal-content">
@@ -154,7 +136,7 @@
                             {% if user.phone != none %}
                             <input id="phone" value="{{ user.phone }}" name="phone" type="text" minlength="10"
                                 maxlength="10" class="form-control rounded-pill"><br>
-                            <input class="form-control rounded-pill" name="token" type="text"  placeholder="กรุณา Access Token ของ Line">    
+                            <input class="form-control rounded-pill" name="token" type="text"  value="{{ user.token }}">    
                             {% else %}
                             <input class="form-control rounded-pill" name="phone" type="text"  minlength="10"
                             maxlength="10" placeholder="กรุณาระบุหมายเลขโทรศัพท์"><br>

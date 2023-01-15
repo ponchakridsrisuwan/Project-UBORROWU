@@ -28,7 +28,6 @@ urlpatterns = [
     path('staff_introduction_history', views.staff_introduction_history, name="staff_introduction_history"),
    
     path('staff_personal_info', views.staff_personal_info, name="staff_personal_info"),
-    path('staff_personal_info_edit/<int:id>', views.staff_personal_info_edit, name="staff_personal_info_edit"),
     path('staff_admin_user', views.staff_admin_user, name="staff_admin_user"),
     path('staff_admin_user_block', views.staff_admin_user_block, name="staff_admin_user_block"),
     path('staff_user_deadline/<int:id>', views.staff_user_deadline, name="staff_user_deadline"),

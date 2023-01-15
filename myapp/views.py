@@ -12,6 +12,10 @@ from myappstaff.models import *
 import datetime
 from django.contrib import messages
 import requests
+from datetime import datetime
+from pytz import timezone as timezonenow
+th_tz = timezonenow('Asia/Bangkok')
+from datetime import datetime
 
 
 #หน้าหลัก
@@ -84,18 +88,11 @@ def phone_add_number(req):
         else: 
             return redirect('/phone_add_number')
     else:
-        return render(req, 'pages/phone_add_number.html')
-    
-def delete_token(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
-        return redirect('/')
-    user = User.objects.get(id=id)
-    user.token = None
-    user.delete()
-    messages.success(req, 'ยกเลิกการเชื่อมต่อ Line สำเร็จ!')
-    return redirect('login')    
+        return render(req, 'pages/phone_add_number.html') 
     
 def user_personal_info(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+        return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
     TotalParcel = AllCartParcel_sum.get('quantity__sum') or 0
@@ -238,6 +235,20 @@ def return_durable(req,id):
     AllLoanDurable.status = 'รอยืนยันการคืน'
     AllLoanDurable.save()
     messages.success(req, 'รอยืนยันการคืน!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    if AllLoanDurable.exists():
+        for user in users:
+            if user.token:
+                url = 'https://notify-api.line.me/api/notify'
+                token = user.token 
+                headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                            }
+                msg = [AllLoanDurable.user.email ,'ทำรายการคืน : ', AllLoanDurable.name, 'วันที่ทำรายการ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+                msg = ' '.join(map(str, msg)) 
+                requests.post(url, headers=headers, data={'message': msg})
     return redirect('/user_borrowed')
 
 #หน้าคืน
@@ -250,7 +261,7 @@ def user_borrowed(req):
     TotalParcel = AllCartParcel_sum.get('quantity__sum') or 0
     TotalDurable = AllCartDurabl_sum.get('quantity__sum') or 0
     Total = TotalParcel + TotalDurable
-    AllLoanDurable = LoanDurable.objects.filter(Q(status='รอยืนยันการคืน')| Q(status='คืนไม่สำเร็จ') | Q(status='กำลังยืม' ), user=req.user)
+    AllLoanDurable = LoanDurable.objects.filter(Q(status='รอยืนยันการคืน')| Q(status='คืนไม่สำเร็จ') | Q(status='กำลังยืม' ), user=req.user) 
     if 'sort' in req.GET:
         last_sort = req.GET.get('sort', 'default')
         if req.GET['sort'] == 'latest':
@@ -278,7 +289,21 @@ def user_borrowed(req):
                                              |Q(status__contains=search_durable)|Q(description__contains=search_durable)
                                              |Q(start_date__contains=search_durable)|Q(date_add__contains=search_durable)
                                              |Q(type__contains=search_durable)|Q(statusDurable__contains=search_durable)
-                                             |Q(nameposition__contains=search_durable))
+                                             |Q(nameposition__contains=search_durable))    
+    def send_loan_durable(user, loan_durable):
+        today = datetime.now().date()
+        end_date = loan_durable.end_date
+        if end_date == today:
+            url = 'https://notify-api.line.me/api/notify'
+            token = user.token
+            headers = {
+                'content-type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer ' + token
+                }
+            msg = f"แจ้งเตือน : วันนี้วันสุดท้ายการยืม {loan_durable.name} กรุณาคืน {loan_durable.name} ด้วยครับ"
+            requests.post(url, headers=headers, data={'message': msg})    
+        for loan_durable in AllLoanDurable:
+            send_loan_durable(req.user, loan_durable)   
     p_listdurable = Paginator(AllLoanDurable, 8)
     page_num = req.GET.get('page', 1)
     try:
@@ -559,6 +584,8 @@ def cart_notupdate(req, id):
     return redirect('/user_cart')
 
 def user_queue(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+        return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
     TotalParcel = AllCartParcel_sum.get('quantity__sum') or 0
@@ -586,6 +613,25 @@ def user_queue(req):
     if 'search_q' in req.GET:
         search_q = req.GET['search_q']
         AllQueueParcel = AllQueueParcel.filter(Q(name__contains=search_q)|Q(type__contains=search_q))
+    def remove_expired_queue_items():
+        today = datetime.now().date()
+        AllQueueParcel = QueueParcel.objects.filter(user=req.user)
+        for item in AllQueueParcel:
+            if not item.is_borrowed and (today - item.date_q.date()).days > 1:
+                item.delete()
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    if AllQueueParcel.exists():
+        for user in users:
+            if user.token:
+                url = 'https://notify-api.line.me/api/notify'
+                token = user.token 
+                headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                            }
+                msg = ['คุณมีระยะเวลาทำรายการยืม ', AllQueueParcel.name, 'ภายใน 1 วัน กรุณาทำรายการยืม' ] 
+                msg = ' '.join(map(str, msg)) 
+                requests.post(url, headers=headers, data={'message': msg})
     p_listqueue = Paginator(AllQueueParcelList, 8)
     page_num = req.GET.get('page', 1)
     try:
@@ -632,6 +678,19 @@ def add_multiple_to_borrow_parcel(req):
             loan_parcel.save()
             cart_parcel.delete()
             messages.success(req, 'รอการอนุมัติ!')
+            users = User.objects.filter(Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+            datetime_th = th_tz.localize(datetime.now())
+            for user in users:
+                if user.token:
+                    url = 'https://notify-api.line.me/api/notify'
+                    token = user.token 
+                    headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                        }
+                    msg = [loan_parcel.user.email, 'ยืมวัสดุรายการ : ', loan_parcel.name, 'จำนวน : ', loan_parcel.quantity, "วันที่ต้องการยืม : ", loan_parcel.start_date, 'เหตุผลการยืม : ', loan_parcel.description,'วันที่ทำรายการ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+                    msg = ' '.join(map(str, msg)) 
+                    requests.post(url, headers=headers, data={'message': msg})
     return redirect('/user_borrow')
 
 def delete_borrow_parcel(req, id):
@@ -803,6 +862,8 @@ def cart_notupdate_durable(req, id):
     return redirect('/user_cart')
     
 def user_queue_durable(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+        return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
     TotalParcel = AllCartParcel_sum.get('quantity__sum') or 0
@@ -830,6 +891,25 @@ def user_queue_durable(req):
     if 'search_q' in req.GET:
         search_q = req.GET['search_q']
         AllQueueDurable = AllQueueDurable.filter(Q(name__contains=search_q)|Q(type__contains=search_q))
+    def remove_expired_queue_items():
+        today = datetime.now().date()
+        AllQueueDurable = QueueDurable.objects.filter(user=req.user)
+        for item in AllQueueDurable:
+            if not item.is_borrowed and (today - item.date_q.date()).days > 1:
+                item.delete()
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    if AllQueueDurable.exists():
+        for user in users:
+            if user.token:
+                url = 'https://notify-api.line.me/api/notify'
+                token = user.token 
+                headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                            }
+                msg = ['คุณมีระยะเวลาทำรายการยืม ', AllQueueDurable.name, 'ภายใน 1 วัน กรุณาทำรายการยืม' ] 
+                msg = ' '.join(map(str, msg)) 
+                requests.post(url, headers=headers, data={'message': msg})    
     p_listqueuedurable = Paginator(AllQueueDurableList, 8)
     page_num = req.GET.get('page', 1)
     try:
@@ -881,6 +961,21 @@ def add_multiple_to_borrow_durable(req):
             loan_durable.save()
             cart_durable.delete()
             messages.success(req, 'รออนุมัติการยืม!')
+            users = User.objects.filter(Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+            datetime_th = th_tz.localize(datetime.now())
+            for user in users:
+                if user.token:
+                    url = 'https://notify-api.line.me/api/notify'
+                    token = user.token 
+                    headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                        }
+                    msg = [loan_durable.user.email, 'ยืมวัสดุรายการ : ', loan_durable.name, 'จำนวน : ', loan_durable.quantity, "วันที่ต้องการยืม : ", 
+                           loan_durable.start_date, 'กำหนดคืน : ', loan_durable.end_date, 'เหตุผลการยืม : ', loan_durable.description,'วันที่ทำรายการ : ', 
+                           datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+                    msg = ' '.join(map(str, msg)) 
+                    requests.post(url, headers=headers, data={'message': msg})
     return redirect('/user_borrow_durable')
 
 def delete_borrow_durable(req, id):
@@ -1088,6 +1183,8 @@ def user_recommend_history(req):
     context = {
         "page" : page,
         "Total" : Total,
+        "last_sort" : last_sort,
+        "search_rec" : search_rec,
     }
     return render(req, 'pages/user_recommend_history.html', context)     
 
@@ -1115,6 +1212,7 @@ def user_recommend(req):
         obj.save()
         messages.success(req, 'แนะนำรายการสำเร็จ!')
         users = User.objects.filter(right="ผู้ดูแลระบบ")
+        datetime_th = th_tz.localize(datetime.now())
         for user in users:
             if user.token:
                 url = 'https://notify-api.line.me/api/notify'
@@ -1123,7 +1221,7 @@ def user_recommend(req):
                     'content-type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + token 
                 }
-                msg = [obj.user , 'ผู้แนะนำรายการ',name,'ยี่ห้อ', brand, 'จำนวน',quantity, 'ราคาต่อ',price, 'วันที่ทำรายการ',datetime, 'ลิ้งแนะนำ',link] 
+                msg = ['ผู้แนะนำรายการเข้าระบบ : ', obj.user.email ,'รายการ : ', name, 'วันที่ทำรายการ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
                 msg = ' '.join(map(str, msg)) 
                 requests.post(url, headers=headers, data={'message': msg})
         return redirect('/user_recommend')   

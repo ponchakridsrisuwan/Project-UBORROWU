@@ -69,6 +69,8 @@ class QueueDurable(models.Model):
     date_q = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=200, default="", blank=True)    
+    is_borrowed = models.BooleanField(default=False)
+
     
     def __str__(self):
         return self.name    
@@ -79,7 +81,8 @@ class QueueParcel(models.Model):
     date_q = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=200, default="", blank=True)    
-    
+    is_borrowed = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name        
     

@@ -11,6 +11,11 @@ from celery.schedules import crontab
 from django.db.models import Q
 from django.contrib import messages
 from apscheduler.schedulers.background import BackgroundScheduler
+import requests
+from pytz import timezone as timezonenow
+th_tz = timezonenow('Asia/Bangkok')
+from datetime import datetime
+
 
 @login_required
 def admin_detail(req, id):
@@ -75,6 +80,20 @@ def admin_user_deadline(req, id):
     obj.save()
     scheduler.add_job(update_user_status, 'date', run_date=obj.deadline, args=[id])
     messages.success(req, 'เปลี่ยนสถานะสำเร็จ!')
+    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    datetime_th = th_tz.localize(datetime.now())
+    if scheduler.exists():
+        for user in users:
+            if user.token:
+                url = 'https://notify-api.line.me/api/notify'
+                token = user.token 
+                headers = {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + token 
+                            }
+                msg = ['คุณถูกระงับสิทธิ์เป็นระยะเวลา ', obj.deadline, 'วัน เหตุผล : ', obj.reason, 'วันที่ถูกระงับ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+                msg = ' '.join(map(str, msg)) 
+                requests.post(url, headers=headers, data={'message': msg})
     return redirect('/admin_block') 
 
 scheduler.shutdown()
