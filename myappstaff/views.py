@@ -682,7 +682,9 @@ def staff_manage_parcel(req):
         elif req.GET['sort'] == 'date':
             AllParcel = AllParcel.order_by('-date')        
         elif req.GET['sort'] == 'numdate':
-            AllParcel = AllParcel.order_by('-numdate')          
+            AllParcel = AllParcel.order_by('-numdate')    
+        elif req.GET['sort'] == 'borrow_count':
+            AllParcel = AllParcel.order_by('-borrow_count')
         elif req.GET['sort'] == 'default':
             AllParcel = Add_Parcel.objects.all()
         else:
@@ -770,7 +772,9 @@ def staff_manage_durable(req):
         elif req.GET['sort'] == 'quantity':
             AllDurable = AllDurable.order_by('-quantity')    
         elif req.GET['sort'] == 'date':
-            AllDurable = AllDurable.order_by('-date')        
+            AllDurable = AllDurable.order_by('-date')     
+        elif req.GET['sort'] == 'borrow_count':
+            AllDurable = AllDurable.order_by('-borrow_count')       
         elif req.GET['sort'] == 'numdate':
             AllDurable = AllDurable.order_by('-numdate')          
         elif req.GET['sort'] == 'default':
@@ -836,6 +840,61 @@ def pdf_print(req):
         "AllRecList" : AllRecList,
     }
     return render( req, 'pages/pdf.html', context)
+
+def pdf_staff_queue(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    AllQueueParcel = QueueParcel.objects.all()
+    context = {
+        "AllQueueParcel" : AllQueueParcel,
+    }
+    return render( req, 'pages/pdf_staff_queue.html', context)
+
+def pdf_staff_queue_durable(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    AllQueueDurable = QueueDurable.objects.all()
+    context = {
+        "AllQueueDurable" : AllQueueDurable,
+    }
+    return render( req, 'pages/pdf_staff_queue_durable.html', context)
+
+def pdf_staff_durable(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    AllDurable = Add_Durable.objects.all()
+    context = {
+        "AllDurable" : AllDurable,
+    }
+    return render( req, 'pages/pdf_staff_durable.html', context)
+
+def pdf_staff_parcel(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    AllParcel = Add_Parcel.objects.all()
+    context = {
+        "AllParcel" : AllParcel,
+    }
+    return render( req, 'pages/pdf_staff_parcel.html', context)
+
+def pdf_staff_max_borrow(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    MaxLoanParcel = Add_Parcel.objects.values("statustype","nametype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    context = {
+        "MaxLoanParcel" : MaxLoanParcel,
+    }
+    return render( req, 'pages/pdf_staff_max_borrow.html', context)
+
+def pdf_staff_max_borrow_durable(req):
+    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
+        return redirect('/')
+    MaxLoanDurable = Add_Durable.objects.values("statustype","nametype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    context = {
+        "MaxLoanDurable" : MaxLoanDurable,
+    }
+    return render( req, 'pages/pdf_staff_max_borrow_durable.html', context)
+
 
 def pdf_print_position(req):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
@@ -1070,8 +1129,28 @@ def staff_max_borrow(req):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
         return redirect('/')
     MaxLoanParcel = Add_Parcel.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    if 'sort' in req.GET:
+        last_sort = req.GET.get('sort', 'default')
+        if req.GET['sort'] == 'name':
+            MaxLoanParcel = MaxLoanParcel.order_by('name')
+        elif req.GET['sort'] == 'quantity':
+            MaxLoanParcel = MaxLoanParcel.order_by('-quantity')    
+        elif req.GET['sort'] == 'default':
+            MaxLoanParcel  = Add_Parcel.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+        else:
+            last_sort = 'default'
+            MaxLoanParcel  = Add_Parcel.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    else:
+        last_sort = 'default'
+        MaxLoanParcel  = Add_Parcel.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    search_query = ""
+    if 'search_query' in req.GET:
+        search_query = req.GET['search_query']
+        MaxLoanParcel = MaxLoanParcel.filter(name__icontains=search_query)     
     context = {
         "MaxLoanParcel" : MaxLoanParcel,
+        "search_query" : search_query,
+        "last_sort" : last_sort,
     }
     return render(req,'pages/staff_max_borrow.html', context )
 
@@ -1079,8 +1158,28 @@ def staff_max_borrow_durable(req):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา":
         return redirect('/')
     MaxLoanDurable = Add_Durable.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    if 'sort' in req.GET:
+        last_sort = req.GET.get('sort', 'default')
+        if req.GET['sort'] == 'name':
+            MaxLoanDurable = MaxLoanDurable.order_by('name')
+        elif req.GET['sort'] == 'quantity':
+            MaxLoanDurable = MaxLoanDurable.order_by('-quantity')    
+        elif req.GET['sort'] == 'default':
+            MaxLoanDurable = Add_Durable.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+        else:
+            last_sort = 'default'
+            MaxLoanDurable = Add_Durable.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    else:
+        last_sort = 'default'
+        MaxLoanDurable = Add_Durable.objects.values("statustype","nametype","quantitytype","quantity", "id","name").annotate(borrow_count=Max('borrow_count')).order_by('-borrow_count')
+    search_query = ""
+    if 'search_query' in req.GET:
+        search_query = req.GET['search_query']
+        MaxLoanDurable = MaxLoanDurable.filter(name__icontains=search_query)     
     context = {
         "MaxLoanDurable" : MaxLoanDurable,
+        "last_sort" : last_sort,
+        "search_query" : search_query,
     }
     return render(req,'pages/staff_max_borrow_durable.html', context )
 
@@ -1169,6 +1268,42 @@ def staff_position(req):
     AllDurable = Add_Durable.objects.all()
     AllParcel = Add_Parcel.objects.all()
     AllPosition =  SettingPosition.objects.all()   
+    if 'sort' in req.GET:
+        last_sort = req.GET.get('sort', 'default')
+        if req.GET['sort'] == 'name':
+            AllParcel = AllParcel.order_by('name')
+            AllDurable = AllDurable.order_by('name')
+        elif req.GET['sort'] == 'category':
+            AllParcel = AllParcel.order_by('category')
+            AllDurable = AllDurable.order_by('category')    
+        elif req.GET['sort'] == 'statustype':
+            AllParcel = AllParcel.order_by('statustype')
+            AllDurable = AllDurable.order_by('statustype')
+        elif req.GET['sort'] == 'status':
+            AllParcel = AllParcel.order_by('status')
+            AllDurable = AllDurable.order_by('status')    
+        elif req.GET['sort'] == 'quantity':
+            AllParcel = AllParcel.order_by('-quantity')
+            AllDurable = AllDurable.order_by('-quantity')    
+        elif req.GET['sort'] == 'borrow_count':
+            AllParcel = AllParcel.order_by('-borrow_count')
+            AllDurable = AllDurable.order_by('-borrow_count')    
+        elif req.GET['sort'] == 'default':
+            AllDurable = Add_Durable.objects.all()
+            AllParcel = Add_Parcel.objects.all()
+        else:
+            last_sort = 'default'
+            AllDurable = Add_Durable.objects.all()
+            AllParcel = Add_Parcel.objects.all()
+    else:
+        last_sort = 'default'
+        AllDurable = Add_Durable.objects.all()
+        AllParcel = Add_Parcel.objects.all()
+    search_query = ""
+    if 'query' in req.GET:
+        search_query = req.GET['query']
+        AllParcel = AllParcel.filter(name__icontains=search_query)
+        AllDurable = AllDurable.filter(name__icontains=search_query)    
     items_position = {}
     for position in AllPosition:
         items_position[position] = []
@@ -1181,5 +1316,7 @@ def staff_position(req):
         'navbar' : 'staff_position',
         "items_position": items_position,
         "AllPosition" : AllPosition,
+        "last_sort" : last_sort,
+        "search_query" : search_query,
     }
     return render(req, 'pages/staff_position.html', context)

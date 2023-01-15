@@ -1250,3 +1250,20 @@ def user_position(req):
         "last_sort" : last_sort,
     }
     return render(req, 'pages/user_position.html', context)
+
+def pdf_print_position(req):
+    AllDurable = Add_Durable.objects.all()
+    AllParcel = Add_Parcel.objects.all()
+    AllPosition =  SettingPosition.objects.all()   
+    items_position = {}
+    for position in AllPosition:
+        items_position[position] = []
+    for AllParcel in AllParcel:
+        items_position[AllParcel.nameposition].append(AllParcel)
+    for AllDurable in AllDurable:
+        items_position[AllDurable.nameposition].append(AllDurable)        
+    context = {
+        "items_position" : items_position,
+        "AllPosition" : AllPosition,
+    }
+    return render( req, 'pages/pdf_print_position.html', context)
