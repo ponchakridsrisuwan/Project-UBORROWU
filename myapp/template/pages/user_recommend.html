@@ -162,16 +162,13 @@
                 <span class="fw-bold">ราคารวม : </span><span class="small text-black-50">{{ AllRecList.total }}</span>
               </div>
               <div class="modal-body">
-                <span class="fw-bold">วันที่ทำรายการ : </span><span class="small text-black-50">{{
-                  AllRecList.datetime|date:"G:m A d M y" }}</span>
+                <span class="fw-bold">วันที่ทำรายการ : </span><span class="small text-black-50">{{AllRecList.datetime|date:"G:m A d M y" }}</span>
               </div>
               <div class="modal-body">
-                <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{ AllRecList.description
-                  }}</span>
+                <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{ AllRecList.description}}</span>
               </div>
               <div class="modal-body">
-                <span class="fw-bold">ลิงก์รายการ : </span><a href="{{ AllRecList.link }}" class="small ">{{
-                  AllRecList.link }}</a>
+                <span class="fw-bold">ลิงก์รายการ : </span><a href="{{ AllRecList.link }}" class="small ">{{AllRecList.link }}</a>
               </div>
               <div class="modal-footer">
                 <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>

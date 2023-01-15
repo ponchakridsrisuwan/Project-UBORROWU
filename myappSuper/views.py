@@ -14,7 +14,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 @login_required
 def admin_detail(req, id):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     AllUser = User.objects.filter(id=id).first()
     context = {
@@ -24,7 +24,7 @@ def admin_detail(req, id):
 
 @login_required
 def admin_user_setting_detail(req, id):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     context = {
         "navbar" : "admin_user_setting_detail",
@@ -35,7 +35,7 @@ def admin_user_setting_detail(req, id):
 
 @login_required
 def delete_user(req, id):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     obj = User.objects.get(id=id)
     obj.delete()
@@ -44,7 +44,7 @@ def delete_user(req, id):
 
 @login_required
 def admin_user_status(req,id):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     obj = User.objects.get(id=id)
     obj.right = req.POST['right']
@@ -62,7 +62,7 @@ def update_user_status(user_id):
 
 @login_required
 def admin_user_deadline(req, id):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     obj = User.objects.get(id=id)
     deadline_str = req.POST['deadline']
@@ -82,7 +82,7 @@ scheduler.shutdown()
 
 @login_required
 def admin_user(req):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     #gg_id = User.objects.filter(user=req.user, provider='google')[0].uid
     AllUserStudent = User.objects.filter(Q(right = "นักศึกษา") | Q(status = "ปกติ"))
@@ -125,7 +125,7 @@ def admin_user(req):
 
 @login_required
 def admin_staff(req):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     AllUserStaff = User.objects.filter(Q(right = "เจ้าหน้าที่")  | Q(right = "ผู้ดูแลระบบ")  | Q(status = "ปกติ"))
     AllUser_count = User.objects.filter(right = "เจ้าหน้าที่", status = "ปกติ")
@@ -165,7 +165,7 @@ def admin_staff(req):
 
 @login_required
 def admin_block(req):
-    if req.user.right != "ผู้ดูแลระบบ":
+    if req.user.right != "ผู้ดูแลระบบ" or req.user.token == None:
         return redirect('/') 
     AllUser = User.objects.filter(status = "ถูกจำกัดสิทธิ์")
     AllUser_count = User.objects.filter(status = "ถูกจำกัดสิทธิ์")

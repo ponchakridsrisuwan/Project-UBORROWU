@@ -52,7 +52,7 @@
                 </div>
                 <div class="mt-5 text-center">
                     <a class="btn btn-outline-dark rounded-pill ms-2" data-bs-toggle="modal"
-                        data-bs-target="#phone">แก้ไขเบอร์โทรศัพท์</a>
+                        data-bs-target="#phone">แก้ไขข้อมูลส่วนตัว</a>
                 </div>
             </div>
         </div>
@@ -68,9 +68,15 @@
                         <span class="font-weight-bold d-block">
                             Line
                         </span>
-                        <a class="d-block text-black-50 labels" href="#">
-                            เชื่อมต่อ
+                        {% if user.phone != none %}
+                        <a class="text-success" data-bs-toggle="modal" data-bs-target="#Delete">
+                            กำลังเชื่อมต่อ
                         </a>
+                        {% else %}
+                        <a class="text-danger" href="https://notify-bot.line.me/th/" target="_blank">
+                            กรุณาเชื่อมต่อ Line
+                        </a>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -85,6 +91,7 @@
             </div>
         </div>
     </div>
+    
 
 
     <!-- รายละเอียดการถูกระงับสิทธิ์ -->
@@ -102,12 +109,12 @@
                     <span class="fw-bold">ระยะเวลากลับสู่สถานะปกติ : </span><span class="small text-black-50">{{
                         user.deadline }}</span><br>
                     <span class="fw-bold">เหตุผลการระงับสิทธิ์ : </span>
-                    {% if user.reason != None %}
+                    {% if user.reason != none %}
                     <span class="fw-bold">เหตุผลการระงับสิทธิ์ :</span>
                     <span class="small text-black-50">{{ user.reason }}</span>
                     <br>
                     {% endif %}
-                    {% if user.reasonfromstaff != None %}
+                    {% if user.reasonfromstaff != none %}
                     <span class="fw-bold">เหตุผลจากเจ้าหน้าที่ :</span>
                     <span class="small text-black-50">{{ user.reasonfromstaff }}</span>
                     {% endif %}
@@ -116,6 +123,22 @@
         </div>
     </div>
 
+                      <!-- ลบข้อมูล -->
+                      <div class="modal fade" name="Delete" id="Delete" tabindex="-1" aria-labelledby="DeleteuserModal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="DeleteuserModal">ยืนยันการยกเลิกเชื่อมต่อ Line </h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                              <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill" href="{% url 'delete_token' user.id %}">ยืนยัน</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
     <!-- เพิ่มเบอร์โทร -->
     <div class="modal fade" id="phone" tabindex="-1" aria-labelledby="phoneModal" aria-hidden="true">
         <form method="post" action="/user_personal_info_edit/{{user.id}}" enctype="multipart/form-data">
@@ -123,17 +146,19 @@
             <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="phoneModal">แก้ไขเบอร์โทรศัพท์</h5>
+                        <h5 class="modal-title" id="phoneModal">แก้ไขข้อมูลส่วนตัว</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="col-md-12">
-                            <label class="labels" for="phone">เบอร์โทรศัพท์</label>
-                            {% if user.phone != None %}
+                            {% if user.phone != none %}
                             <input id="phone" value="{{ user.phone }}" name="phone" type="text" minlength="10"
-                                maxlength="10" class="form-control rounded-pill">
+                                maxlength="10" class="form-control rounded-pill"><br>
+                            <input class="form-control rounded-pill" name="token" type="text"  placeholder="กรุณา Access Token ของ Line">    
                             {% else %}
-                            <input class="form-control rounded-pill" placeholder="กรุณาระบุหมายเลขโทรศัพท์">
+                            <input class="form-control rounded-pill" name="phone" type="text"  minlength="10"
+                            maxlength="10" placeholder="กรุณาระบุหมายเลขโทรศัพท์"><br>
+                            <input class="form-control rounded-pill" name="token" type="text"  placeholder="กรุณา Access Token ของ Line">
                             {% endif %}
                         </div>
                     </div>
@@ -145,5 +170,6 @@
                 </div>
         </form>
     </div>
+
 </div>
 {% endblock %}
