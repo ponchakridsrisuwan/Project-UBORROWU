@@ -59,6 +59,12 @@ urlpatterns = [
     path('pdf_borrow',views.pdf_borrow, name='pdf_borrow'),
     path('pdf_borrow_durable',views.pdf_borrow_durable, name='pdf_borrow_durable'),
     path('pdf_print_position',views.pdf_print_position, name='pdf_print_position'),
+    path('pdf_staff_max_borrow',views.pdf_staff_max_borrow, name='pdf_staff_max_borrow'),
+    path('pdf_staff_max_borrow_durable',views.pdf_staff_max_borrow_durable, name='pdf_staff_max_borrow_durable'),
+    path('pdf_staff_parcel',views.pdf_staff_parcel, name='pdf_staff_parcel'),
+    path('pdf_staff_durable',views.pdf_staff_durable, name='pdf_staff_durable'),
+    path('pdf_staff_queue',views.pdf_staff_queue, name='pdf_staff_queue'),
+    path('pdf_staff_queue_durable',views.pdf_staff_queue_durable, name='pdf_staff_queue_durable'),
     
     #path staff_setting
     path('staff_setting',views.staff_setting, name="staff_setting"), 
