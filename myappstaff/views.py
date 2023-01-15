@@ -823,15 +823,10 @@ def edit_staff_manage_parcel(req, id):
     AllParcel = Add_Parcel.objects.get(id=id)
     form = ParcelForm(req.POST or None, req.FILES or None, instance=AllParcel) 
     if form.is_valid():
-        for field in form.fields:
-            if not form.cleaned_data[field]:
-                form.cleaned_data[field] = getattr(AllParcel, field)
         form.save()
         messages.success(req, 'แก้ไขรายการวัสดุสำเร็จ!')
-        return redirect('/staff_manage_parcel')
-    else:
-        messages.error(req, 'แก้ไขรายการวัสดุไม่สำเร็จ!')
-        return redirect('/staff_manage_parcel')
+    return redirect('staff_manage_parcel')
+    
 
 @login_required
 def delete_staff_manage_parcel(req, id):
