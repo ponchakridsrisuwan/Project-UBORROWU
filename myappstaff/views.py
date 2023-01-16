@@ -759,6 +759,9 @@ def staff_manage_parcel(req):
 
     if req.method == 'POST':
         form = ParcelForm(req.POST, req.FILES)
+        # addinstance = [{
+        #     'name' : 'jimmy'
+        # }]
         if form.is_valid():
             if form.cleaned_data['quantitytype'] == "∞":
                 form.cleaned_data['quantity'] += 1

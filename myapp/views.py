@@ -234,21 +234,22 @@ def return_durable(req,id):
     AllLoanDurable = LoanDurable.objects.filter(id=id).first()
     AllLoanDurable.status = 'รอยืนยันการคืน'
     AllLoanDurable.save()
-    messages.success(req, 'รอยืนยันการคืน!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
-    datetime_th = th_tz.localize(datetime.now())
-    if AllLoanDurable.exists():
-        for user in users:
-            if user.token:
-                url = 'https://notify-api.line.me/api/notify'
-                token = user.token 
-                headers = {
-                            'content-type': 'application/x-www-form-urlencoded',
-                            'Authorization': 'Bearer ' + token 
-                            }
-                msg = [AllLoanDurable.user.email ,'ทำรายการคืน : ', AllLoanDurable.name, 'วันที่ทำรายการ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
-                msg = ' '.join(map(str, msg)) 
-                requests.post(url, headers=headers, data={'message': msg})
+    # users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    # datetime_th = th_tz.localize(datetime.now())
+    # if AllLoanDurable.exists():
+    # for user in users:
+    #         if user.token:
+    #             url = 'https://notify-api.line.me/api/notify'
+    #             token = user.token 
+    #             headers = {
+    #                         'content-type': 'application/x-www-form-urlencoded',
+    #                         'Authorization': 'Bearer ' + token 
+    #                         }
+    #             msg = [AllLoanDurable.user.email ,'ทำรายการคืน : ', AllLoanDurable.name, 'วันที่ทำรายการ : ', datetime_th.strftime("%Y-%m-%d %H:%M") ] 
+    #             msg = ' '.join(map(str, msg)) 
+    #             requests.post(url, headers=headers, data={'message': msg})
+    # messages.success(req, 'รอยืนยันการคืน!')
+    
     return redirect('/user_borrowed')
 
 #หน้าคืน

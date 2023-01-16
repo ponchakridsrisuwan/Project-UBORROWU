@@ -75,19 +75,15 @@
                             text-center">
                             {% if AllLoanDurable.status == "กำลังยืม" %}
                             <li>
-                                <a class="dropdown-item btn-0
-                            data-bs-toggle=" modal" data-bs-target="#Return-{{forloop.counter}}">คืนครุภัณฑ์</a>
+                                <a class="dropdown-item btn-0" data-bs-toggle="modal" data-bs-target="#Return-{{forloop.counter}}">คืนครุภัณฑ์</a>
                             </li>
                             {% elif AllLoanDurable.status == "คืนไม่สำเร็จ" %}
                             <li>
-                                <a class="dropdown-item btn-0
-                            data-bs-toggle=" modal"
-                                    data-bs-target="#Return-{{forloop.counter}}">คืนครุภัณฑ์อีกครั้ง</a>
+                                <a class="dropdown-item btn-0" data-bs-toggle="modal" data-bs-target="#Return-{{forloop.counter}}">คืนครุภัณฑ์อีกครั้ง</a>
                             </li>
                             {% endif %}
                             <li>
-                                <a class="dropdown-item btn-0" data-bs-toggle="modal"
-                                    data-bs-target="#detail-{{forloop.counter}}">รายละเอียด</a>
+                                <a class="dropdown-item btn-0" data-bs-toggle="modal"  data-bs-target="#detail-{{forloop.counter}}">รายละเอียด</a>
                             </li>
                         </ul>
                     </td>
