@@ -47,6 +47,7 @@ class ParcelForm(forms.ModelForm):
         }
 
 class DurableForm(forms.ModelForm):
+    # CategoryType = forms.ModelChoiceField(queryset=CategoryType.objects.all(), empty_label="(Nothing)", to_field_name='name_CategoryType')
     class Meta:
         model = Add_Durable
         fields = ["name", "nameposition",  "statustype", "status", "category", "quantitytype", "quantity", "numdate", "description", "image"]

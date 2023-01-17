@@ -10,7 +10,7 @@
             <div class="d-flex flex-row">
                 <a class="btn btn-outline-dark rounded-pill ms-2" data-bs-toggle="modal"
                     data-bs-target="#additem">เพิ่มรายการ</a>
-                    <a href="{% url 'pdf_staff_durable' %}" class="btn btn-outline-dark rounded-pill">PDF</a>
+                <a href="{% url 'pdf_staff_durable' %}" class="btn btn-outline-dark rounded-pill">PDF</a>
             </div>
         </div>
         <div class="d-flex row rounded-2 small fw-bold justify-content-between
@@ -19,18 +19,25 @@
                 <div class="align-items-center">
                     <div class="align-items-center">
                         <span>เรียงโดย</span>
-                        <a href="?sort=name" class="px-2 me-2 btn {% if last_sort == 'name' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">รายการ</a>
-                        <a href="?sort=quantity" class="px-2 me-2 btn {% if last_sort == 'quantity' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">จำนวน</a>
-                        <a href="?sort=borrow_count" class="px-2 me-2 btn {% if last_sort == 'borrow_count' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">ถูกยืม</a>
-                        <a href="?sort=date" class="px-2 me-2 btn {% if last_sort == 'date' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">วันที่เพิ่ม</a>
-                        <a href="?sort=numdate" class="px-2 me-2 btn {% if last_sort == 'numdate' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">จำนวนวันที่อนุญาต</a>
-                        <a href="?sort=default" class="px-2 me-2 btn border-0 rounded-pill"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a href="?sort=name"
+                            class="px-2 me-2 btn {% if last_sort == 'name' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">รายการ</a>
+                        <a href="?sort=quantity"
+                            class="px-2 me-2 btn {% if last_sort == 'quantity' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">จำนวน</a>
+                        <a href="?sort=borrow_count"
+                            class="px-2 me-2 btn {% if last_sort == 'borrow_count' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">ถูกยืม</a>
+                        <a href="?sort=date"
+                            class="px-2 me-2 btn {% if last_sort == 'date' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">วันที่เพิ่ม</a>
+                        <a href="?sort=numdate"
+                            class="px-2 me-2 btn {% if last_sort == 'numdate' %}btn-dark{% else %}btn-outline-dark{% endif %} border-0 rounded-pill">จำนวนวันที่อนุญาต</a>
+                        <a href="?sort=default" class="px-2 me-2 btn border-0 rounded-pill"><i class="fa fa-refresh"
+                                aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-6">
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
+                    <input class="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search"
+                        name="search_query" value="{{search_query}}">
                     <button class="btn btn-outline-dark" type="submit">Search</button>
                 </form>
             </div>
@@ -62,7 +69,7 @@
                 <!-- แบบtable -->
                 <table class="table">
                     <thead class="table">
-                      <tr class="table bg-warning">
+                        <tr class="table bg-warning">
                             <th class="col-md-3" scope="col">รายการ</th>
                             <th class="col-md-2 text-center" scope="col">จำนวนครั้งที่ยืม</th>
                             <th class="col-md-1 text-center" scope="col">คงเหลือ</th>
@@ -89,13 +96,13 @@
                             </td>
                             <td>
                                 <a class="text-center text-black" style="text-decoration:none"
-                                    href="{% url 'staff_manage_detail' AllDurable.id %}">{{ AllDurable.borrow_count }}</a>
+                                    href="{% url 'staff_manage_detail' AllDurable.id %}">{{ AllDurable.borrow_count}}</a>
                             </td>
-                            
+
                             {% if AllDurable.quantitytype == "∞" %}
                             <td>
                                 <a class="text-center text-black" style="text-decoration:none"
-                                    href="{% url 'staff_manage_detail' AllDurable.id %}">{{ AllDurable.quantitytype }}</a>
+                                    href="{% url 'staff_manage_detail' AllDurable.id %}">{{ AllDurable.quantitytype}}</a>
                             </td>
                             {% else %}
                             <td>
@@ -145,25 +152,31 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <span class="fw-bold">ชื่อครุภัณฑ์ : </span><span class="small text-black-50">{{AllDurable.name }}</span>
+                                        <span class="fw-bold">ชื่อครุภัณฑ์ : </span><span
+                                            class="small text-black-50">{{AllDurable.name }}</span>
                                     </div>
                                     <div class="modal-body">
-                                        <span class="fw-bold">หมวดหมู่ : </span><span class="small text-black-50">{{AllDurable.category }}</span>
+                                        <span class="fw-bold">หมวดหมู่ : </span><span
+                                            class="small text-black-50">{{AllDurable.category }}</span>
                                     </div>
                                     <div class="modal-body">
-                                        <span class="fw-bold">สถานะ : </span><span class="small text-black-50">{{AllDurable.status }}</span>
+                                        <span class="fw-bold">สถานะ : </span><span
+                                            class="small text-black-50">{{AllDurable.status }}</span>
                                     </div>
                                     {% if AllDurable.quantitytype == "∞" %}
                                     <div class="modal-body">
-                                        <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{AllDurable.quantitytype }}</span>
+                                        <span class="fw-bold">จำนวน : </span><span
+                                            class="small text-black-50">{{AllDurable.quantitytype }}</span>
                                     </div>
                                     {% else %}
                                     <div class="modal-body">
-                                        <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllDurable.quantity }}</span>
+                                        <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{
+                                            AllDurable.quantity }}</span>
                                     </div>
                                     {% endif %}
                                     <div class="modal-body">
-                                        <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{AllDurable.description }}</span>
+                                        <span class="fw-bold">รายละเอียด : </span><span
+                                            class="small text-black-50">{{AllDurable.description }}</span>
                                     </div>
                                     <div class="modal-body">
                                         <span class="fw-bold">รูปภาพ : </span><img alt="image"
@@ -199,42 +212,68 @@
 
                                         <div class="modal-body">
                                             <p>
-                                                <label for="id_name">แก้ไขชื่อครุภัณฑ์ :</label>
+                                                <label for="id_name">ระบุชื่อครุภัณฑ์ :</label>
                                                 <input type="text" name="name" class="form-control rounded-pill"
                                                     maxlength="200" id="id_name" value="{{ AllDurable.name }}">
                                             </p>
                                             <p>
-                                                <label for="id_category">ตำแหน่งการวางครุภัณฑ์ :</label>
-                                                {{ form.nameposition }}
+                                                <label for="id_nameposition">ตำแหน่งการวางครุภัณฑ์:</label>
+                                                <select name="nameposition" class="form-control rounded-pill"
+                                                    id="id_nameposition">
+                                                    {% for category in settingPosition %}
+                                                    <option value="{{category.id}}" {% if category == AllDurable.nameposition %} selected {% endif %}>{{category}}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </p>
                                             <p>
-                                                <label for="id_category">เลือกหมวดหมู่ครุภัณฑ์ :</label>
-                                                {{ form.category }}
+                                                <label for="id_statustype">เลือกประเภท:</label>
+                                                <select name="statustype" class="form-control rounded-pill"
+                                                    id="id_statustype">
+                                                    <option value="ต้องคืน" selected="">ต้องคืน</option>
+                                                    <option value="ไม่ต้องคืน">ไม่ต้องคืน</option>
+                                                </select>
                                             </p>
                                             <p>
                                                 <label for="id_status">เลือกสถานะครุภัณฑ์ :</label>
-                                                {{ form.status }}
+                                                <select name="status" class="form-control rounded-pill" id="id_status">
+                                                    {% for category in categoryStatus %}
+                                                    <option value="{{category.id}}" {% if category == AllDurable.status %} selected {% endif %}>{{category}}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </p>
                                             <p>
-                                                <label for="id_status">เลือกประเภทของจำนวน :</label>
-                                                {{ form.quantitytype }}
+                                                <label for="id_category">เลือกหมวดหมู่ครุภัณฑ์ :</label>
+                                                <select name="category" class="form-control rounded-pill"
+                                                    id="id_category">
+                                                    {% for category in categoryType %}
+                                                    <option value="{{category.id}}" {% if category == AllDurable.category %} selected {% endif %}>{{category}}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </p>
                                             <p>
-                                                <label for="id_quantity">แก้ไขจำนวนครุภัณฑ์ :</label>
-                                                <input type="number" name="quantity" class="form-control rounded-pill"
-                                                    maxlength="200" id="id_quantity" value="{{ AllDurable.quantity }}">
+                                                <label for="id_quantitytype">เลือกประเภทของจำนวน :</label>
+                                                <select name="quantitytype" class="form-control rounded-pill"
+                                                    id="id_quantitytype">
+                                                    <option value="ต้องการระบุจำนวน" selected="">ต้องการระบุจำนวน
+                                                    </option>
+                                                    <option value="∞">∞</option>
+                                                </select>
+                                            </p>
+                                            <p>
+                                                <label for="id_quantity">ระบุจำนวนครุภัณฑ์ :</label>
+                                                <input type="number" name="quantity" value="{{ AllDurable.quantity }}"
+                                                    class="form-control rounded-pill" required="" id="id_quantity">
+                                            </p>
+                                            <p>
+                                                <label for="id_numdate">ระบุจำนวนวันที่อนุญาตให้ยืม :</label>
+                                                <input type="number" name="numdate" value="{{ AllDurable.numdate }}"
+                                                    class="form-control rounded-pill" min="0" required=""
+                                                    id="id_numdate">
                                             </p>
                                             <p>
                                                 <label for="id_description">รายละเอียดครุภัณฑ์ :</label>
                                                 <textarea name="description" cols="40" rows="10"
-                                                    class="form-control rounded-5"
-                                                    id="id_description">{{ AllDurable.description }}</textarea>
-                                            </p>
-                                            <p>
-                                                <label for="formFileMultiple" class="form-label" for="image">แก้ไขรูปภาพ
-                                                    :</label>
-                                                <input id="image" name="image" class="form-control rounded-pill"
-                                                    type="file" id="formFileMultiple" accept="image/*" multiple />
+                                                    class="form-control rounded-5" id="id_description">{{ AllDurable.description }}</textarea>
                                             </p>
                                         </div>
                                         <div class="modal-footer">
@@ -259,7 +298,7 @@
                     <a href="?page={{ page.next_page_number }}">หน้าถัดไป</a>
                     {% endif %}
                 </div>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}

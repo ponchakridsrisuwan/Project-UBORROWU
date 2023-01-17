@@ -756,12 +756,9 @@ def staff_manage_parcel(req):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.right == "นักศึกษา" or req.user.token == None:
         return redirect('/')
     form = ParcelForm()
-
+    form.fields['name'].initial = 'test'
     if req.method == 'POST':
-        form = ParcelForm(req.POST, req.FILES)
-        # addinstance = [{
-        #     'name' : 'jimmy'
-        # }]
+        form = ParcelForm(req.POST or None, req.FILES or None)
         if form.is_valid():
             if form.cleaned_data['quantitytype'] == "∞":
                 form.cleaned_data['quantity'] += 1
@@ -771,6 +768,9 @@ def staff_manage_parcel(req):
     else:
         form = ParcelForm()
     AllParcel = Add_Parcel.objects.all()
+    categoryType = CategoryType.objects.all()
+    categoryStatus = CategoryStatus.objects.all()
+    settingPosition = SettingPosition.objects.all()
     if 'sort' in req.GET:
         last_sort = req.GET.get('sort', 'default')
         if req.GET['sort'] == 'name':
@@ -807,6 +807,9 @@ def staff_manage_parcel(req):
         "form" : form,
         "last_sort" : last_sort,
         "search_query" : search_query,
+        "categoryType" : categoryType,
+        "categoryStatus" : categoryStatus,
+        "settingPosition" : settingPosition
     }    
     return render(req, 'pages/staff_manage_parcel.html', context)
 
@@ -858,6 +861,9 @@ def staff_manage_durable(req):
     else:
         form = DurableForm()
     AllDurable = Add_Durable.objects.all()
+    categoryType = CategoryType.objects.all()
+    categoryStatus = CategoryStatus.objects.all()
+    settingPosition = SettingPosition.objects.all()
     if 'sort' in req.GET:
         last_sort = req.GET.get('sort', 'default')
         if req.GET['sort'] == 'name':
@@ -894,6 +900,9 @@ def staff_manage_durable(req):
         "form" : form,
         "last_sort" : last_sort,
         "search_query" : search_query,
+        "categoryType" : categoryType,
+        "categoryStatus" : categoryStatus,
+        "settingPosition" : settingPosition
     }    
     return render(req, 'pages/staff_manage_durable.html', context) 
 
