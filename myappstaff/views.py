@@ -584,7 +584,7 @@ def staff_return_durable(req,id):
     AllLoanDurable.status = 'คืนสำเร็จ'
     AllLoanDurable.save()
     messages.success(req, 'คืนสำเร็จ!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:
@@ -609,7 +609,7 @@ def staff_unreturn_durable(req,id):
     AllLoanDurable.status = 'คืนไม่สำเร็จ'
     AllLoanDurable.save()
     messages.warning(req, 'คืนไม่สำเร็จ!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:
@@ -633,7 +633,7 @@ def staff_borrow_parcel(req,id):
     AllLoanParcel.reasonfromstaff = req.POST['reasonfromstaff']
     AllLoanParcel.status = 'รอยืนยันการรับ'
     AllLoanParcel.save()
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:
@@ -658,7 +658,7 @@ def staff_borrow_durable(req,id):
     AllLoanDurable.status = 'รอยืนยันการรับ'
     AllLoanDurable.save()
     messages.success(req, 'รอยืนยันการรับ!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:
@@ -683,7 +683,7 @@ def staff_unborrow_parcel(req,id):
     AllLoanParcel.status = 'ไม่อนุมัติ'
     AllLoanParcel.save()
     messages.success(req, 'ไม่อนุมัติ!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:
@@ -708,7 +708,7 @@ def staff_unborrow_durable(req,id):
     AllLoanDurable.status = 'ไม่อนุมัติ'
     AllLoanDurable.save()
     messages.success(req, 'ไม่อนุมัติ!')
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
+    users = User.objects.filter(right="นักศึกษา")
     datetime_th = th_tz.localize(datetime.now())
     for user in users:
         if user.token:

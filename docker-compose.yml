@@ -5,10 +5,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: UborrowUV.01
+      MYSQL_USER: AdminSite
+      MYSQL_PASSWORD: UborrowUV.01
+      MYSQL_DATABASE: DatabaseUBU
     ports:
       - "3307:3307"
     volumes:
