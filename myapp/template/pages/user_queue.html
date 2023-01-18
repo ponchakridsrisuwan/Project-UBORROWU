@@ -75,18 +75,15 @@
                                     class="small text-black-50">{{AllQueueParcel.name}}</span>
                             </div>
                             <div class="modal-body">
-                                <span class="fw-bold">ยี่ห้อ : </span><span class="small text-black-50">{{
-                                    AllQueueParcel.type }}</span>
+                                <span class="fw-bold">ยี่ห้อ : </span><span class="small text-black-50">{{AllQueueParcel.type }}</span>
                             </div>
                             <div class="modal-body">
-                                <span class="fw-bold">วันที่ทำรายการ : </span><span class="small text-black-50">{{
-                                    AllQueueParcel.date_q|date:"G:m A d M y" }}</span>
+                                <span class="fw-bold">วันที่ทำรายการ : </span><span class="small text-black-50">{{ AllQueueParcel.date_q|date:"G:m A d M y" }}</span>
                             </div>
                             <div class="modal-footer">
                                 <button type="cancer" class="btn btn-secondary rounded-pill"
                                     data-bs-dismiss="modal">ยกเลิก</button>
-                                <a type="submit" value="ยืนยัน" class="btn btn-warning
-                  rounded-pill" href="{% url 'delete_queue' AllQueueParcel.id %}">ยืนยัน</a>
+                                <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill" href="{% url 'delete_queue' AllQueueParcel.id %}">ยืนยัน</a>
                             </div>
                         </div>
                     </div>

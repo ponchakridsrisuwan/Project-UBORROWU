@@ -451,15 +451,18 @@ def add_to_cart(req, id):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
         return redirect('/')
     parcel_item = Add_Parcel.objects.get(id=id)
+    queue_item = QueueParcel.objects.filter(user=req.user, queue_item=parcel_item).first()
     if parcel_item.quantity > 0 or parcel_item.quantitytype == "∞":
         if parcel_item.quantitytype == "∞":
             parcel_item.borrow_count += 1  
             parcel_item.save()
+            queue_item.delete()
             messages.success(req, 'เพิ่มรายการสำเร็จ!')
         else :    
             parcel_item.quantity -= 1
             parcel_item.borrow_count += 1  
             parcel_item.save()
+            queue_item.delete()
             messages.success(req, 'เพิ่มรายการสำเร็จ!')
         ex_cart_parcel = CartParcel.objects.filter(parcel_item=parcel_item, user=req.user)
         if ex_cart_parcel.exists():
@@ -482,16 +485,11 @@ def add_to_cart(req, id):
                 cart_parcel.save()
         return redirect('/user_cart')
     else:
-        queue_item = QueueParcel.objects.filter(user=req.user, queue_item=parcel_item).first()
         if queue_item:
-            if parcel_item.quantity > 0 or parcel_item.quantitytype == "∞":
-                if parcel_item.quantitytype == "∞":
-                    parcel_item.borrow_count += 1  
-                    parcel_item.save()
-                else:    
-                    parcel_item.quantity -= 1
-                    parcel_item.borrow_count += 1  
-                    parcel_item.save()
+            if parcel_item.quantity > 0 :    
+                parcel_item.quantity -= 1
+                parcel_item.borrow_count += 1  
+                parcel_item.save()
                 ex_cart_parcel = CartParcel.objects.filter(parcel_item=parcel_item, user=req.user)
                 if ex_cart_parcel.exists():
                     cart_parcel = ex_cart_parcel.first()
@@ -591,7 +589,7 @@ def user_queue(req):
     TotalDurable = AllCartDurabl_sum.get('quantity__sum') or 0
     Total = TotalParcel + TotalDurable
     AllQueueParcel = QueueParcel.objects.filter(user=req.user)
-    AllQueueParcelList = QueueParcel.objects.all()
+    AllQueueParcelList = QueueParcel.objects.filter(user=req.user)
     if 'sort' in req.GET:
         last_sort = req.GET.get('sort', 'default')
         if req.GET['sort'] == 'latest':
@@ -612,25 +610,6 @@ def user_queue(req):
     if 'search_q' in req.GET:
         search_q = req.GET['search_q']
         AllQueueParcel = AllQueueParcel.filter(Q(name__contains=search_q)|Q(type__contains=search_q))
-    def remove_expired_queue_items():
-        today = datetime.now().date()
-        AllQueueParcel = QueueParcel.objects.filter(user=req.user)
-        for item in AllQueueParcel:
-            if not item.is_borrowed and (today - item.date_q.date()).days > 1:
-                item.delete()
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
-    if AllQueueParcel.exists():
-        for user in users:
-            if user.token:
-                url = 'https://notify-api.line.me/api/notify'
-                token = user.token 
-                headers = {
-                            'content-type': 'application/x-www-form-urlencoded',
-                            'Authorization': 'Bearer ' + token 
-                            }
-                msg = ['คุณมีระยะเวลาทำรายการยืม ', AllQueueParcel.name, 'ภายใน 1 วัน กรุณาทำรายการยืม' ] 
-                msg = ' '.join(map(str, msg)) 
-                requests.post(url, headers=headers, data={'message': msg})
     p_listqueue = Paginator(AllQueueParcelList, 8)
     page_num = req.GET.get('page', 1)
     try:
@@ -748,15 +727,18 @@ def add_to_cart_durable(req, id):
     if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     durable_item = Add_Durable.objects.get(id=id)
+    queue_item = QueueDurable.objects.filter(user=req.user, queue_item=durable_item).first()
     if durable_item.quantity > 0 or durable_item.quantitytype == "∞":
         if durable_item.quantitytype == "∞":
             durable_item.borrow_count += 1  
             durable_item.save()
+            queue_item.delete()
             messages.success(req, 'เพิ่มรายการสำเร็จ!')
         else:
             durable_item.quantity -= 1
             durable_item.borrow_count += 1  
             durable_item.save()
+            queue_item.delete()
             messages.success(req, 'เพิ่มรายการสำเร็จ!')
         existing_cart_durable = CartDurable.objects.filter(durable_item=durable_item, user=req.user)
         if existing_cart_durable.exists():
@@ -779,7 +761,6 @@ def add_to_cart_durable(req, id):
                 cart_durable.save()
         return redirect('/user_cart')
     else:
-        queue_item = QueueDurable.objects.filter(user=req.user, queue_item=durable_item).first()
         if queue_item:
             if durable_item.quantity > 0 or durable_item.quantitytype == "∞":
                 if durable_item.quantitytype == "∞":
@@ -890,25 +871,6 @@ def user_queue_durable(req):
     if 'search_q' in req.GET:
         search_q = req.GET['search_q']
         AllQueueDurable = AllQueueDurable.filter(Q(name__contains=search_q)|Q(type__contains=search_q))
-    def remove_expired_queue_items():
-        today = datetime.now().date()
-        AllQueueDurable = QueueDurable.objects.filter(user=req.user)
-        for item in AllQueueDurable:
-            if not item.is_borrowed and (today - item.date_q.date()).days > 1:
-                item.delete()
-    users = User.objects.filter(Q(right="นักศึกษา")|Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
-    if AllQueueDurable.exists():
-        for user in users:
-            if user.token:
-                url = 'https://notify-api.line.me/api/notify'
-                token = user.token 
-                headers = {
-                            'content-type': 'application/x-www-form-urlencoded',
-                            'Authorization': 'Bearer ' + token 
-                            }
-                msg = ['คุณมีระยะเวลาทำรายการยืม ', AllQueueDurable.name, 'ภายใน 1 วัน กรุณาทำรายการยืม' ] 
-                msg = ' '.join(map(str, msg)) 
-                requests.post(url, headers=headers, data={'message': msg})    
     p_listqueuedurable = Paginator(AllQueueDurableList, 8)
     page_num = req.GET.get('page', 1)
     try:
@@ -1210,7 +1172,7 @@ def user_recommend(req):
                           price=price, link=link, description=description, datetime=datetime)
         obj.save()
         messages.success(req, 'แนะนำรายการสำเร็จ!')
-        users = User.objects.filter(right="ผู้ดูแลระบบ")
+        users = User.objects.filter(Q(right="เจ้าหน้าที่")|Q(right="ผู้ดูแลระบบ"))
         datetime_th = th_tz.localize(datetime.now())
         for user in users:
             if user.token:
