@@ -91,7 +91,7 @@ def phone_add_number(req):
         return render(req, 'pages/phone_add_number.html') 
     
 def user_personal_info(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -106,7 +106,7 @@ def user_personal_info(req):
 #หน้ายืม
 @login_required
 def user_borrow(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -157,7 +157,7 @@ def user_borrow(req):
     return render(req,'pages/user_borrow.html', context)
     
 def user_borrow_durable(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -211,7 +211,7 @@ def user_borrow_durable(req):
     return render(req,'pages/user_borrow_durable.html', context)    
 
 def confirm_parcel(req,id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllLoanParcel = LoanParcel.objects.filter(id=id).first()
     AllLoanParcel.status = 'ยืมสำเร็จ'
@@ -220,7 +220,7 @@ def confirm_parcel(req,id):
     return redirect('/user_history')
 
 def confirm_durable(req,id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllLoanDurable = LoanDurable.objects.filter(id=id).first()
     AllLoanDurable.status = 'กำลังยืม'
@@ -229,7 +229,7 @@ def confirm_durable(req,id):
     return redirect('/user_borrowed')
 
 def return_durable(req,id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllLoanDurable = LoanDurable.objects.filter(id=id).first()
     AllLoanDurable.status = 'รอยืนยันการคืน'
@@ -253,7 +253,7 @@ def return_durable(req,id):
 #หน้าคืน
 @login_required
 def user_borrowed(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -322,7 +322,7 @@ def user_borrowed(req):
 #หน้าประวัติ
 @login_required
 def user_history(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -374,7 +374,7 @@ def user_history(req):
     
 @login_required
 def user_history_durable(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -428,7 +428,7 @@ def user_history_durable(req):
 
 #หน้ายืม
 def user_cart(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel = CartParcel.objects.filter(user = req.user)
     AllCartDurable = CartDurable.objects.filter(user = req.user)
@@ -448,7 +448,7 @@ def user_cart(req):
     return render(req, 'pages/user_cart.html',context)
 
 def add_to_cart(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     parcel_item = Add_Parcel.objects.get(id=id)
     queue_item = QueueParcel.objects.filter(user=req.user, queue_item=parcel_item).first()
@@ -524,7 +524,7 @@ def add_to_cart(req, id):
     
     
 def cart_update(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     parcel_item = Add_Parcel.objects.get(id=id)
     if parcel_item.quantity > 0 or parcel_item.quantitytype == "∞":
@@ -541,7 +541,7 @@ def cart_update(req, id):
     return redirect('/user_cart')
 
 def cart_notupdate(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     parcel_item = Add_Parcel.objects.get(id=id)
     if parcel_item.quantity > 0 or parcel_item.quantitytype == "∞":
@@ -559,7 +559,7 @@ def cart_notupdate(req, id):
     return redirect('/user_cart')
 
 def cart_notupdate(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     parcel_item = Add_Parcel.objects.get(id=id)
     if parcel_item.quantity > 0 or parcel_item.quantitytype == "∞":
@@ -581,7 +581,7 @@ def cart_notupdate(req, id):
     return redirect('/user_cart')
 
 def user_queue(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -627,7 +627,7 @@ def user_queue(req):
     return render(req, 'pages/user_queue.html', context)
 
 def add_multiple_to_borrow_parcel(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     description = req.POST.get('description')
     if not description or description == "":
@@ -672,7 +672,7 @@ def add_multiple_to_borrow_parcel(req):
     return redirect('/user_borrow')
 
 def delete_borrow_parcel(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     try:
         loan_parcel = LoanParcel.objects.get(id=id)
@@ -695,7 +695,7 @@ def delete_borrow_parcel(req, id):
     
     
 def delete_add_to_cart(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     if CartParcel.objects.filter(id=id).exists():
         obj = CartParcel.objects.get(id=id)
@@ -717,14 +717,14 @@ def delete_add_to_cart(req, id):
         return redirect('/user_cart')
     
 def delete_queue(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     obj = QueueParcel.objects.get(id=id)
     obj.delete()
     return redirect('/user_queue')          
 
 def add_to_cart_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     durable_item = Add_Durable.objects.get(id=id)
     queue_item = QueueDurable.objects.filter(user=req.user, queue_item=durable_item).first()
@@ -803,7 +803,7 @@ def add_to_cart_durable(req, id):
         return redirect('/user_queue_durable')
 
 def cart_update_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     durable_item = Add_Durable.objects.get(id=id)
     if durable_item.quantity > 0 or durable_item.quantitytype == "∞":
@@ -820,7 +820,7 @@ def cart_update_durable(req, id):
     return redirect('/user_cart')
 
 def cart_notupdate_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None:
         return redirect('/')
     durable_item = Add_Durable.objects.get(id=id)
     if durable_item.quantity > 0 or durable_item.quantitytype == "∞":
@@ -842,7 +842,7 @@ def cart_notupdate_durable(req, id):
     return redirect('/user_cart')
     
 def user_queue_durable(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -888,7 +888,7 @@ def user_queue_durable(req):
     return render(req, 'pages/user_queue_durable.html', context)    
     
 def add_multiple_to_borrow_durable(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     description = req.POST.get('description')
     if not description or description == "":
@@ -940,7 +940,7 @@ def add_multiple_to_borrow_durable(req):
     return redirect('/user_borrow_durable')
 
 def delete_borrow_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     try:
         loan_durable = LoanDurable.objects.get(id=id)
@@ -962,7 +962,7 @@ def delete_borrow_durable(req, id):
         return redirect('/user_cart')
     
 def delete_durable_add_to_cart(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     if CartDurable.objects.filter(id=id).exists():
         obj = CartDurable.objects.get(id=id)
@@ -984,7 +984,7 @@ def delete_durable_add_to_cart(req, id):
         return redirect('/user_cart')  
     
 def delete_queue_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     obj = QueueDurable.objects.get(id=id)
     obj.delete()
@@ -993,7 +993,7 @@ def delete_queue_durable(req, id):
 #หน้ารายละเอียดวัสดุ
 @login_required
 def user_detail(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -1014,7 +1014,7 @@ def user_detail(req, id):
     return render(req,'pages/user_detail.html',context)
 
 def user_detail_durable(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -1107,7 +1107,7 @@ def user_durable_articles(req):
 
 @login_required
 def user_recommend_history(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -1157,7 +1157,7 @@ def user_recommend_history(req):
 #หน้าแนะนำวัสดุ
 @login_required
 def user_recommend(req):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -1237,7 +1237,7 @@ def user_recommend(req):
 
 @login_required
 def user_recommend_edit(req,id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     obj = ListFromRec.objects.get(id=id)
     obj.name = req.POST['name']
@@ -1254,7 +1254,7 @@ def user_recommend_edit(req,id):
 # รายงานสถานะข้อมูลการแนะนำวัสดุเข้าสู่ระบบ
 @login_required
 def user_recommend_detail(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     AllCartParcel_sum = CartParcel.objects.filter(user = req.user).aggregate(Sum('quantity'))
     AllCartDurabl_sum = CartDurable.objects.filter(user = req.user).aggregate(Sum('quantity'))
@@ -1269,7 +1269,7 @@ def user_recommend_detail(req, id):
     return render( req, 'pages/user_recommend_detail.html', context)
 
 def deleteRecList(req, id):
-    if req.user.status == "ถูกจำกัดสิทธ์" or req.user.phone is None or req.user.token is None:
+    if req.user.status == "ถูกจำกัดสิทธิ์" or req.user.phone is None or req.user.token is None:
         return redirect('/')
     obj = ListFromRec.objects.get(id=id)
     obj.delete()
