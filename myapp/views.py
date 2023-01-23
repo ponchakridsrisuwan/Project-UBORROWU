@@ -1100,14 +1100,7 @@ def user_durable_articles(req):
         nametype_list = [i[0] for i in NAMETYPE] 
         context = {
             "navbar" : "user_durable_articles",
-            "last_sort" : last_sort,
-            "AllParcel" : AllParcel,
-            "AllDurable" : AllDurable,
             "Total" : Total,
-            "search_query" : search_query,
-            "AllCategoryType" : AllCategoryType,
-            "selected_category" : selected_category,
-            "statustype": statustype_list,
             "nametype" : nametype_list,
         }
         return render(req, 'pages/user_durable_articles.html', context)
@@ -1347,11 +1340,7 @@ def user_position(req):
         Total = TotalParcel + TotalDurable
         context ={
                     'navbar' : 'user_position',
-                    "items_position": items_position,
-                    "AllPosition" : AllPosition,
                     "Total" : Total,
-                    "search_query" : search_query,
-                    "last_sort" : last_sort,
                 }
     return render(req, 'pages/user_position.html', context)
 
