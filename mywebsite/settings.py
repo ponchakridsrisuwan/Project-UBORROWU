@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'allauth.account', #new
     'allauth.socialaccount', #new
     'allauth.socialaccount.providers.google', #new
-    'django_extensions', 
+    #'django_extensions', 
     'myapp',
     'myappstaff',
     'myappSuper',
@@ -141,6 +141,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # Default primary key field type
