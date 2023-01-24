@@ -93,12 +93,12 @@ WSGI_APPLICATION = 'mywebsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kong',
-        'USER': 'kong',
-        'PASSWORD': 'kong',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'DatabaseUBU',
+        'USER': 'AdminSite',
+        'PASSWORD': 'UborrowUV.01',
         'HOST': '127.0.0.1',
-        'PORT': '15432',
+        'PORT': 3306,
     }
 }
 
