@@ -91,6 +91,17 @@ WSGI_APPLICATION = 'mywebsite.wsgi.application'
     }
 }"""
 
+"""DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'kong',
+        'USER': 'kong',
+        'PASSWORD': 'kong',
+        'HOST': '127.0.0.1',
+        'PORT': '15432',
+    }
+}"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
