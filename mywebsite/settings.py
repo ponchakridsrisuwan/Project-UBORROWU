@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'allauth.account', #new
     'allauth.socialaccount', #new
     'allauth.socialaccount.providers.google', #new
-    'django_extensions', 
+    #'django_extensions', 
     'myapp',
     'myappstaff',
     'myappSuper',
@@ -93,12 +93,12 @@ WSGI_APPLICATION = 'mywebsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kong',
-        'USER': 'kong',
-        'PASSWORD': 'kong',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'DatabaseUBU',
+        'USER': 'AdminSite',
+        'PASSWORD': 'UborrowUV.01',
         'HOST': '127.0.0.1',
-        'PORT': '15432',
+        'PORT': 3306,
     }
 }
 
@@ -141,6 +141,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # Default primary key field type
